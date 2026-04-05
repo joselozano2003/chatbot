@@ -3,7 +3,8 @@
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
 import { memo } from "react";
-import { suggestions } from "@/lib/constants";
+import { useOpusAccount } from "@/hooks/use-opus-account";
+import { ACCOUNT_SUGGESTIONS } from "@/lib/opus/data";
 import type { ChatMessage } from "@/lib/types";
 import { Suggestion } from "../ai-elements/suggestion";
 import type { VisibilityType } from "./visibility-selector";
@@ -15,7 +16,8 @@ type SuggestedActionsProps = {
 };
 
 function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
-  const suggestedActions = suggestions;
+  const { activeAccount } = useOpusAccount();
+  const suggestedActions = ACCOUNT_SUGGESTIONS[activeAccount];
 
   return (
     <div
@@ -63,16 +65,5 @@ function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
   );
 }
 
-export const SuggestedActions = memo(
-  PureSuggestedActions,
-  (prevProps, nextProps) => {
-    if (prevProps.chatId !== nextProps.chatId) {
-      return false;
-    }
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) {
-      return false;
-    }
-
-    return true;
-  }
-);
+// Not memoized with a custom comparator — account context changes trigger re-render naturally
+export const SuggestedActions = PureSuggestedActions;

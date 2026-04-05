@@ -18,6 +18,8 @@ import {
   SidebarHistory,
 } from "@/components/chat/sidebar-history";
 import { SidebarUserNav } from "@/components/chat/sidebar-user-nav";
+import { OpusAccountSwitcher } from "@/components/chat/opus-account-switcher";
+import { OpusClipLibrary } from "@/components/chat/opus-clip-library";
 import {
   Sidebar,
   SidebarContent,
@@ -70,30 +72,31 @@ export function AppSidebar({ user }: { user: User | undefined }) {
         <SidebarHeader className="pb-0 pt-3">
           <SidebarMenu>
             <SidebarMenuItem className="flex flex-row items-center justify-between">
-              <div className="group/logo relative flex items-center justify-center">
-                <SidebarMenuButton
-                  asChild
-                  className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0"
-                  tooltip="Chatbot"
-                >
-                  <Link href="/" onClick={() => setOpenMobile(false)}>
-                    <MessageSquareIcon className="size-4 text-sidebar-foreground/50" />
-                  </Link>
-                </SidebarMenuButton>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SidebarMenuButton
-                      className="pointer-events-none absolute inset-0 size-8 opacity-0 group-data-[collapsible=icon]:pointer-events-auto group-data-[collapsible=icon]:group-hover/logo:opacity-100"
-                      onClick={() => toggleSidebar()}
-                    >
-                      <PanelLeftIcon className="size-4" />
-                    </SidebarMenuButton>
-                  </TooltipTrigger>
-                  <TooltipContent className="hidden md:block" side="right">
-                    Open sidebar
-                  </TooltipContent>
-                </Tooltip>
-              </div>
+              {/* Chat home link — visible when sidebar is expanded */}
+              <SidebarMenuButton
+                asChild
+                className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:hidden"
+                tooltip="Chatbot"
+              >
+                <Link href="/" onClick={() => setOpenMobile(false)}>
+                  <MessageSquareIcon className="size-4 text-sidebar-foreground/50" />
+                </Link>
+              </SidebarMenuButton>
+
+              {/* Expand button — visible only when sidebar is collapsed */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SidebarMenuButton
+                    className="hidden size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:flex"
+                    onClick={() => toggleSidebar()}
+                  >
+                    <PanelLeftIcon className="size-4" />
+                  </SidebarMenuButton>
+                </TooltipTrigger>
+                <TooltipContent className="hidden md:block" side="right">
+                  Open sidebar
+                </TooltipContent>
+              </Tooltip>
               <div className="group-data-[collapsible=icon]:hidden">
                 <SidebarTrigger className="text-sidebar-foreground/60 transition-colors duration-150 hover:text-sidebar-foreground" />
               </div>
@@ -132,6 +135,16 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+
+          {/* OpusClip account switcher */}
+          <div className="group-data-[collapsible=icon]:hidden">
+            <div className="my-1 mx-2 border-t border-sidebar-border/50" />
+            <OpusAccountSwitcher />
+            <div className="my-1 mx-2 border-t border-sidebar-border/50" />
+            <OpusClipLibrary />
+            <div className="my-1 mx-2 border-t border-sidebar-border/50" />
+          </div>
+
           <SidebarHistory user={user} />
         </SidebarContent>
         <SidebarFooter className="border-t border-sidebar-border pt-2 pb-3">

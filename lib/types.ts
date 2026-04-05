@@ -2,7 +2,9 @@ import type { InferUITool, UIMessage } from "ai";
 import { z } from "zod";
 import type { ArtifactKind } from "@/components/chat/artifact";
 import type { createDocument } from "./ai/tools/create-document";
+import type { displayClip } from "./ai/tools/display-clip";
 import type { getWeather } from "./ai/tools/get-weather";
+import type { requestClipApproval } from "./ai/tools/request-clip-approval";
 import type { requestSuggestions } from "./ai/tools/request-suggestions";
 import type { updateDocument } from "./ai/tools/update-document";
 import type { Suggestion } from "./db/schema";
@@ -19,12 +21,16 @@ type updateDocumentTool = InferUITool<ReturnType<typeof updateDocument>>;
 type requestSuggestionsTool = InferUITool<
   ReturnType<typeof requestSuggestions>
 >;
+type displayClipTool = InferUITool<typeof displayClip>;
+type requestClipApprovalTool = InferUITool<typeof requestClipApproval>;
 
 export type ChatTools = {
   getWeather: weatherTool;
   createDocument: createDocumentTool;
   updateDocument: updateDocumentTool;
   requestSuggestions: requestSuggestionsTool;
+  displayClip: displayClipTool;
+  requestClipApproval: requestClipApprovalTool;
 };
 
 export type CustomUIDataTypes = {

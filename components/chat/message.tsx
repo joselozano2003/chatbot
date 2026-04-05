@@ -20,6 +20,8 @@ import { MessageActions } from "./message-actions";
 import { MessageReasoning } from "./message-reasoning";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+import { ClipCard } from "./clip-card";
+import { ApprovalBlock } from "./approval-block";
 
 const PurePreviewMessage = ({
   addToolApprovalResponse,
@@ -262,6 +264,74 @@ const PurePreviewMessage = ({
             isReadonly={isReadonly}
             result={part.output}
           />
+        </div>
+      );
+    }
+
+    if (type === "tool-displayClip") {
+      const { toolCallId, state } = part;
+      if (state === "output-available" && part.output && !("error" in part.output)) {
+        const { clip, action, note } = part.output as {
+          clip: import("@/lib/opus/data").OpusClip;
+          action?: "view" | "draft" | "schedule" | "approve";
+          note?: string;
+        };
+        return (
+          <div className="w-full max-w-md" key={toolCallId}>
+            <ClipCard action={action} clip={clip} note={note} />
+          </div>
+        );
+      }
+      if (state === "output-available" && part.output && "error" in part.output) {
+        return (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-[12px] text-red-600 dark:bg-red-950/50 dark:border-red-900" key={toolCallId}>
+            {String(part.output.error)}
+          </div>
+        );
+      }
+      return (
+        <div className="w-full max-w-md" key={toolCallId}>
+          <div className="animate-pulse rounded-xl border border-border/60 bg-card/40 h-48" />
+        </div>
+      );
+    }
+
+    if (type === "tool-requestClipApproval") {
+      const { toolCallId, state } = part;
+      if (state === "output-available" && part.output && !("error" in part.output)) {
+        const output = part.output as {
+          clip: import("@/lib/opus/data").OpusClip;
+          approvalType: "single" | "editor" | "admin";
+          stage: number;
+          scheduledFor?: string;
+          platform?: string;
+          context?: string;
+          requestedAt: string;
+        };
+        return (
+          <div className="w-full max-w-md" key={toolCallId}>
+            <ApprovalBlock
+              approvalType={output.approvalType}
+              clip={output.clip}
+              context={output.context}
+              platform={output.platform}
+              requestedAt={output.requestedAt}
+              scheduledFor={output.scheduledFor}
+              stage={output.stage}
+            />
+          </div>
+        );
+      }
+      if (state === "output-available" && part.output && "error" in part.output) {
+        return (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-[12px] text-red-600 dark:bg-red-950/50 dark:border-red-900" key={toolCallId}>
+            {String(part.output.error)}
+          </div>
+        );
+      }
+      return (
+        <div className="w-full max-w-md" key={toolCallId}>
+          <div className="animate-pulse rounded-xl border border-amber-500/30 bg-amber-500/10 h-40" />
         </div>
       );
     }

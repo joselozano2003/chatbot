@@ -21,8 +21,12 @@ import {
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import { getLanguageModel } from "@/lib/ai/providers";
 import { createDocument } from "@/lib/ai/tools/create-document";
+import { createClip } from "@/lib/ai/tools/create-clip";
+import { displayClip } from "@/lib/ai/tools/display-clip";
+import { updateClip } from "@/lib/ai/tools/update-clip";
 import { editDocument } from "@/lib/ai/tools/edit-document";
 import { getWeather } from "@/lib/ai/tools/get-weather";
+import { requestClipApproval } from "@/lib/ai/tools/request-clip-approval";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { updateDocument } from "@/lib/ai/tools/update-document";
 import { isProductionEnvironment } from "@/lib/constants";
@@ -68,7 +72,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, messages, selectedChatModel, selectedVisibilityType } =
+    const { id, message, messages, selectedChatModel, selectedVisibilityType, activeAccount } =
       requestBody;
 
     const [, session] = await Promise.all([
@@ -193,12 +197,14 @@ export async function POST(request: Request) {
       execute: async ({ writer: dataStream }) => {
         const result = streamText({
           model: getLanguageModel(chatModel),
-          system: systemPrompt({ requestHints, supportsTools }),
+          system: systemPrompt({ requestHints, supportsTools, activeAccount }),
           messages: modelMessages,
           stopWhen: stepCountIs(5),
           experimental_activeTools:
             isReasoningModel && !supportsTools
               ? []
+              : activeAccount
+              ? ["createClip", "updateClip", "displayClip", "requestClipApproval"]
               : [
                   "getWeather",
                   "createDocument",
@@ -232,6 +238,10 @@ export async function POST(request: Request) {
               dataStream,
               modelId: chatModel,
             }),
+            createClip,
+            updateClip,
+            displayClip,
+            requestClipApproval,
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,

@@ -23,6 +23,7 @@ import { toast } from "@/components/chat/toast";
 import type { VisibilityType } from "@/components/chat/visibility-selector";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
+import { useOpusAccount } from "@/hooks/use-opus-account";
 import type { Vote } from "@/lib/db/schema";
 import { ChatbotError } from "@/lib/errors";
 import type { ChatMessage } from "@/lib/types";
@@ -78,6 +79,12 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     currentModelIdRef.current = currentModelId;
   }, [currentModelId]);
+
+  const { activeAccount } = useOpusAccount();
+  const activeAccountRef = useRef(activeAccount);
+  useEffect(() => {
+    activeAccountRef.current = activeAccount;
+  }, [activeAccount]);
 
   const [input, setInput] = useState("");
   const [showCreditCardAlert, setShowCreditCardAlert] = useState(false);
@@ -146,6 +153,7 @@ export function ActiveChatProvider({ children }: { children: ReactNode }) {
               : { message: lastMessage }),
             selectedChatModel: currentModelIdRef.current,
             selectedVisibilityType: visibility,
+            activeAccount: activeAccountRef.current,
             ...request.body,
           },
         };

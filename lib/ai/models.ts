@@ -1,11 +1,11 @@
-export const DEFAULT_CHAT_MODEL = "moonshotai/kimi-k2-0905";
+export const DEFAULT_CHAT_MODEL = "anthropic/claude-sonnet-4-5";
 
 export const titleModel = {
-  id: "mistral/mistral-small",
-  name: "Mistral Small",
-  provider: "mistral",
+  id: "google/gemini-2.5-flash-lite",
+  name: "Gemini 2.5 Flash Lite",
+  provider: "google",
   description: "Fast model for title generation",
-  gatewayOrder: ["mistral"],
+  gatewayOrder: ["google"],
 };
 
 export type ModelCapabilities = {
@@ -25,39 +25,11 @@ export type ChatModel = {
 
 export const chatModels: ChatModel[] = [
   {
-    id: "deepseek/deepseek-v3.2",
-    name: "DeepSeek V3.2",
-    provider: "deepseek",
-    description: "Fast and capable model with tool use",
-    gatewayOrder: ["bedrock", "deepinfra"],
-  },
-  {
-    id: "mistral/codestral",
-    name: "Codestral",
-    provider: "mistral",
-    description: "Code-focused model with tool use",
-    gatewayOrder: ["mistral"],
-  },
-  {
-    id: "mistral/mistral-small",
-    name: "Mistral Small",
-    provider: "mistral",
-    description: "Fast vision model with tool use",
-    gatewayOrder: ["mistral"],
-  },
-  {
-    id: "moonshotai/kimi-k2-0905",
-    name: "Kimi K2 0905",
-    provider: "moonshotai",
-    description: "Fast model with tool use",
-    gatewayOrder: ["baseten", "fireworks"],
-  },
-  {
-    id: "moonshotai/kimi-k2.5",
-    name: "Kimi K2.5",
-    provider: "moonshotai",
-    description: "Moonshot AI flagship model",
-    gatewayOrder: ["fireworks", "bedrock"],
+    id: "anthropic/claude-sonnet-4-5",
+    name: "Claude Sonnet 4.5",
+    provider: "anthropic",
+    description: "Anthropic's Claude Sonnet 4.5 with tool use",
+    gatewayOrder: ["anthropic"],
   },
   {
     id: "openai/gpt-oss-20b",
@@ -76,11 +48,18 @@ export const chatModels: ChatModel[] = [
     reasoningEffort: "low",
   },
   {
-    id: "xai/grok-4.1-fast-non-reasoning",
-    name: "Grok 4.1 Fast",
-    provider: "xai",
-    description: "Fast non-reasoning model with tool use",
-    gatewayOrder: ["xai"],
+    id: "google/gemini-2.5-flash-lite",
+    name: "Gemini 2.5 Flash Lite",
+    provider: "google",
+    description: "Google's lightweight Gemini 2.5 Flash model",
+    gatewayOrder: ["google"],
+  },
+  {
+    id: "openai/gpt-5.4-nano",
+    name: "GPT-5.4 Nano",
+    provider: "openai",
+    description: "OpenAI's compact GPT-5.4 model",
+    gatewayOrder: ["openai"],
   },
 ];
 
